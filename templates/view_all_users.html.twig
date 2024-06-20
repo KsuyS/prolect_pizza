@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+{% block title %}All users{% endblock %}
+{% block body %}
+    <style>
+        button {
+            background-color:#c5d0e6;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+    <h1>Список пользователей:</h1> 
+    <div>
+        {% for user in view_all_users %}
+            <div>
+                <a href="/view_user/{{ user.id }}">
+                    <label>{{ user.firstName }} {{ user.lastname }}</label>
+                </a>
+                <a href="/delete_user/{{ user.id }}"><button>Удалить</button></a>    
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

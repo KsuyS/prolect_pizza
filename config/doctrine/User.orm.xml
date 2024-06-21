@@ -6,7 +6,7 @@
 
     <entity name="App\Entity\User" table="user">
 
-        <id name="userId" type="integer" column="user_id">
+        <id name="id" type="integer" column="user_id">
             <generator strategy="IDENTITY"/>
         </id>
 

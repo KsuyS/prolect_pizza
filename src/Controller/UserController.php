@@ -5,7 +5,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\View\PhpTemplateEngine;
 use App\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,14 +23,12 @@ class UserController extends AbstractController
 
     public function __construct(UserRepository $userRepository)
     {
-        $this->uerRepository = $userRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function index(): Response
     {
-        $contents = PhpTemplateEngine::render('register_user_form.html.twig');
-        return new Response($contents);
-        //return $this->render('register_user_form.html.twig');
+        return $this->render('register_user_form.html.twig');
     }
     private function getAvatarExtension(string $mimeType): ?string
     {

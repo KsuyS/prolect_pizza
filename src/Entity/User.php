@@ -7,9 +7,6 @@ class User
     private ?int $id;
     private string $firstName;
     private string $lastName;
-    private ?string $middleName;
-    private string $gender; 
-    private ?\DateTimeImmutable $birthDate;
     private string $email;
     private ?string $phone;
     private ?string $avatarPath;
@@ -18,9 +15,6 @@ class User
         ?int $id, 
         string $firstName, 
         string $lastName,
-        ?string $middleName,
-        string $gender,    
-        ?\DateTimeImmutable $birthDate,
         string $email,
         ?string $phone,
         ?string $avatarPath)
@@ -28,9 +22,6 @@ class User
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->middleName = $middleName;
-        $this->gender = $gender;
-        $this->birthDate = $birthDate;
         $this->email = $email;
         $this->phone = $phone;
         $this->avatarPath = $avatarPath;
@@ -59,35 +50,6 @@ class User
     public function setLastName($last_name): void
     {
         $this->lastName = $last_name;
-    }
-
-    public function getMiddleName(): ?string
-    {
-        return $this->middleName;
-    }
-
-    public function setMiddleName($middle_name): void
-    {
-        $this->middleName = $middle_name;
-    }
-
-    public function getGender(): string{
-        return $this->gender;
-    }
-
-    public function setGender($gender): void
-    {
-        $this->gender = $gender;
-    }
-
-    public function getBirthDate(): ?\DateTimeImmutable
-    {
-        return $this->birthDate;
-    }
-
-    public function setBirthDate(?\DateTimeImmutable $birthDate): void
-    {
-        $this->birthDate = $birthDate;
     }
 
     public function getEmail(): string

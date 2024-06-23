@@ -1,0 +1,40 @@
+{% extends "/user/baseUser.html.twig" %}
+{% block title %}
+	{{ firstName }}
+	{{ lastName }}
+{% endblock %}
+{% block body %}
+	<div class="content">
+		<img src="/image/main.jpg" class="background"/>
+		<div class="block">
+			<h1 class="block__header">{{ firstName }}
+				{{ lastName }}</h1>
+			<div class="block__div">
+				<div class="block__form-group">
+					<label class="block__title">Почта:</label>
+					<label class="block__subtitle">{{ email }}</label>
+				</div>
+				<div class="block__form-group">
+					<label class="block__title">Номер телефона:</label>
+					<label class="block__subtitle">{{ phone }}</label>
+				</div>
+				<div class="block__avatar-preview-box">
+					{% if avatarPath != null %}
+					</label><img class="block__preview-avatar" src="/../uploads/{{ avatarPath }}">
+				{% endif %}
+			</div>
+		</div>
+		<div class="block__butt">
+			<a href="/update_user/{{ userId }}">
+				<button type="submit" name="update" id="update" class="block__button block__update">Изменить</button>
+			</a>
+			<a href="/delete_user/{{ userId }}">
+				<button type="submit" name="delete" id="delete" class="block__button block__delete">Удалить</button>
+			</a>
+            <a href="/view_all_users">
+				<button name="back" id="back" class="block__button block__back">Назад</button>
+			</a>
+		</div>
+	</div>
+
+</div>{% endblock %}

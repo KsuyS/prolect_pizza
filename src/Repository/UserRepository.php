@@ -28,6 +28,11 @@ class UserRepository
         return $this->repository->findOneBy(['email' => (string) $email]);
     }
 
+    public function findByPhone(string $phone): ?User
+    {
+        return $this->repository->findOneBy(['phone' => (string) $phone]);
+    }
+
     public function store(User $user): int
     {
         $this->entityManager->persist($user);

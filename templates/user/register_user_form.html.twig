@@ -1,0 +1,54 @@
+{% extends "/user/baseUser.html.twig" %}
+{% block title %}Регистрация
+{% endblock %}
+{% block body %}
+	<form enctype="multipart/form-data" action="/register_user" method="post" class="register-form container">
+		<div class="content">
+			<img src="/image/main.jpg" class="background"/>
+			<div class="block">
+				<h1 class="block__head">Введите данные:</h1>
+				<div class="status-of-form">
+					<div class="status-of-form__image"></div>
+					<span class="status-of-form__mess"></span>
+				</div>
+				<div class="block__div">
+					<div class="block__form-group">
+						<label class="block__title">Фамилия</label>
+						<input class="block__input block__input-firstName" type="text" id="first_name" name="first_name"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Имя</label>
+						<input class="block__input block__input-lastName" type="text" id="last_name" name="last_name"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Адрес электронной почты</label>
+						<input class="block__input block__input-email" type="text" id="email" name="email"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Номер телефона</label>
+						<input class="block__input block__input-number" type="text" id="phone" name="phone"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Фотография</label>
+						<label class="block__avatar">
+							<div class="block__avatar-preview-box">
+								<img class="block__avatar-preview img__preview" src="/image/avatar.png" alt="Image preview"/>
+							</div>
+							<input class="block__input block__input-avatar" type="file" name="avatar_path" accept="image/png, image/jpeg, image/gif" id="avatar_path"></input>
+						<div class="block__upload-new-button">
+							<div class="status-of-form__image"></div>
+							<span class="block__button-text">Upload New</span>
+						</div>
+						<button type="button" class="block__remove-button">
+							<div class="status-of-form__image"></div>
+							<span class="block__button-text">Remove</span>
+						</button>
+					</label>
+				</div>
+			</div>
+			<div class="block__but">
+				<button type="submit" name="register" id="register" class="block__button block__register">Зарегистрироваться</button>
+			</div>
+		</div>
+	</div>
+</form>{% endblock %}

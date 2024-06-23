@@ -1,0 +1,54 @@
+{% extends "/user/baseUser.html.twig" %}
+{% block title %}Обновление
+{% endblock %}
+{% block body %}
+	<form enctype="multipart/form-data" action="/update_user/{{ userId }}" method="post" class="register-form container">
+		<div class="content">
+			<img src="/image/main.jpg" class="background"/>
+			<div class="block">
+				<h1 class="block__head">Ваши данные:</h1>
+				<input name="user_id" id="user_id" type="hidden" value="{{ userId }}">
+				<div class="block__div">
+					<div class="block__form-group">
+						<label class="block__title">Фамилия</label>
+						<input class="block__input block__input-firstName" type="text" id="first_name" name="first_name" value="{{ firstName }}"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Имя</label>
+						<input class="block__input block__input-lastName" type="text" id="last_name" name="last_name" value="{{ lastName }}"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Адрес электронной почты</label>
+						<input class="block__input block__input-email" type="text" id="email" name="email" value="{{ email }}"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Номер телефона</label>
+						<input class="block__input block__input-number" type="text" id="phone" name="phone" value="{{ phone }}"/>
+					</div>
+					<div class="block__form-group">
+						<label class="block__title">Фотография</label>
+						<label class="block__avatar">
+							<div class="block__avatar-preview-box">
+								<img class="block__avatar-preview img__preview" src="/image/avatar.png" alt="Image preview"/>
+							</div>
+							<input class="block__input block__input-avatar" type="file" name="avatar_path" accept="image/png, image/jpeg, image/gif" id="avatar_path"></input>
+						<div class="block__upload-new-button">
+							<div class="status-of-form__image"></div>
+							<span class="block__button-text">Upload New</span>
+						</div>
+						<button type="button" class="block__remove-button">
+							<div class="status-of-form__image"></div>
+							<span class="block__button-text">Remove</span>
+						</button>
+					</label>
+				</div>
+			</div>
+			<div class="block__butt">
+				<a href="/view_all_users">
+					<button name="back" id="back" class="block__button block__back">Назад</button>
+				</a>
+				<button type="submit" name="update" id="update" class="block__button block__update">Обновить</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}

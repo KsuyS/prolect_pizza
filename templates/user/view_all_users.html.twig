@@ -1,0 +1,21 @@
+{% extends "/user/baseUser.html.twig" %}
+{% block title %}Пользователи
+{% endblock %}
+{% block body %}
+	<div class="content">
+		<img src="/image/main_image.jpg" class="background"/>
+		<div class="section">
+			<h1 class="section__head">Все пользователи:</h1>
+            <div class="section__line"></div>
+			<div class="section__div">
+				{% for user in view_all_users %}
+					<div class="section__form-group">
+						<a href="view_user/{{ user.id }}">
+							<label class="section__title">{{ user.firstName }} {{ user.lastname }}</label>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -28,7 +28,7 @@ class UserController extends AbstractController
 
     public function index(): Response
     {
-        return $this->render('register_user_form.html.twig');
+        return $this->render('user/register_user_form.html.twig');
     }
     private function getAvatarExtension(string $mimeType): ?string
     {
@@ -37,16 +37,10 @@ class UserController extends AbstractController
 
     public function registerUser(Request $data): ?Response
     {
-        $birthDate = Utils::parseDateTime($_POST['birth_date'], self::DATE_TIME_FORMAT);
-        $birthDate = $birthDate->setTime(0, 0, 0);
-
         $user = new User(
             null,
             $data->get('first_name'),
             $data->get('last_name'),
-            empty($data->get('middle_name')) ? null : $data->get('middle_name'),
-            $data->get('gender'),
-            $birthDate,
             $data->get('email'),
             empty($data->get('phone')) ? null : $data->get('phone'),
             null,
@@ -57,9 +51,13 @@ class UserController extends AbstractController
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
 
+        if ($this->userRepository->findByPhone($data->get('phone')) != null) {
+            $mess = 'A user with such an phone already exists!';
+            return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
+        }
+
         $userId = $this->userRepository->store($user);
         $file = $this->downloadImage($userId);
-
         if ($file != null) {
             $user->setAvatarPath($file);
             $this->userRepository->store($user);
@@ -95,21 +93,23 @@ class UserController extends AbstractController
         }
 
         if ($data->isMethod('post')) {
-            if ($this->userRepository->findByEmail($data->get('email')) != null) {
-                $mess = 'The user with this email already exists';
-                return $this->redirectToRoute('error_page', ['mess' => $mess]);  
-            } 
+            // if (($this->userRepository->findByEmail($data->get('email')) != null)) {
+            //     $mess = 'The user with this email already exists';
+            //     return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
+            // }
+            // if ($this->userRepository->findByPhone($data->get('phone')) != null) {
+            //     $mess = 'The user with this phone already exists';
+            //     return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
+            // }
             $user = $this->updateUsersData($data);
-            echo('Данные успешно обновлены!');
+            echo ('Данные успешно обновлены!');
+            return $this->redirectToRoute('view_user', ['userId' => $userId], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('update_user_form.html.twig', [
+        return $this->render('user/update_user_form.html.twig', [
             'userId' => $user->getId(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
-            'middleName' => $user->getMiddleName(),
-            'gender' => $user->getGender(),
-            'birthDate' => Utils::convertDateTimeToStringForm($user->getBirthDate()),
             'email' => $user->getEmail(),
             'phone' => $user->getPhone(),
             'avatarPath' => $user->getAvatarPath(),
@@ -120,19 +120,9 @@ class UserController extends AbstractController
         $id = (int) $data->get('user_id');
         $user = $this->userRepository->findById($id);
 
-        $birthDate = Utils::parseDateTime($data->get('birth_date'), self::DATE_TIME_FORMAT);
-        $birthDate = $birthDate->setTime(0, 0, 0);
-
-        if ($this->userRepository->findByEmail($data->get('email')) != null) {
-            header('Location: ' . '/pageWithError.php', true, 303);
-        }
-
         if ($user != null) {
             $user->setFirstName($data->get('first_name'));
             $user->setLastName($data->get('last_name'));
-            $user->setMiddleName(empty($data->get('middle_name')) ? null : $data->get('middle_name'));
-            $user->setGender($data->get('gender'));
-            $user->setBirthDate($birthDate);
             $user->setEmail(empty($data->get('email')) ? null : $data->get('email'));
             $user->setPhone(empty($data->get('phone')) ? null : $data->get('phone'));
         } else {
@@ -184,13 +174,10 @@ class UserController extends AbstractController
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
 
-        return $this->render('view_user.html.twig', [
+        return $this->render('user/view_user.html.twig', [
             'userId' => $user->getId(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
-            'middleName' => $user->getMiddleName(),
-            'gender' => $user->getGender(),
-            'birthDate' => Utils::convertDateTimeToStringForm($user->getBirthDate()),
             'email' => $user->getEmail(),
             'phone' => $user->getPhone(),
             'avatarPath' => $user->getAvatarPath(),
@@ -200,7 +187,7 @@ class UserController extends AbstractController
     public function viewAllUsers(): Response
     {
         $view_all_users = $this->userRepository->listAll();
-        return $this->render('view_all_users.html.twig', ['view_all_users' => $view_all_users]);
+        return $this->render('user/view_all_users.html.twig', ['view_all_users' => $view_all_users]);
     }
     public function pageWithError(string $mess): Response
     {

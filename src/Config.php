@@ -6,7 +6,7 @@ class Config
 {
     public static function getDatabaseDsn(): string
     {
-        return 'mysql:host=localhost;dbname=php_course';
+        return 'mysql:host=localhost;dbname=php_project';
     }
 
     public static function getDatabaseUser(): string

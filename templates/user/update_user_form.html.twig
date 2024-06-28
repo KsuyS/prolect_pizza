@@ -1,6 +1,9 @@
 {% extends "/user/baseUser.html.twig" %}
 {% block title %}Обновление
 {% endblock %}
+{% block javascripts %}
+		<script type="text/javascript" src="/scrypt/register-user.js"></script>
+	{% endblock %}
 {% block body %}
 	<form enctype="multipart/form-data" action="/update_user/{{ userId }}" method="post" class="register-form container">
 		<div class="content">
@@ -29,7 +32,7 @@
 						<label class="block__title">Фотография</label>
 						<label class="block__avatar">
 							<div class="block__avatar-preview-box">
-								<img class="block__avatar-preview img__preview" src="/image/avatar.png" alt="Image preview"/>
+								<img class="block__avatar-preview img__preview" src="/../uploads/{{ avatarPath }}" alt="Image preview"/>
 							</div>
 							<input class="block__input block__input-avatar" type="file" name="avatar_path" accept="image/png, image/jpeg, image/gif" id="avatar_path"></input>
 						<div class="block__upload-new-button">
@@ -44,9 +47,7 @@
 				</div>
 			</div>
 			<div class="block__butt">
-				<a href="/view_all_users">
-					<button name="back" id="back" class="block__button block__back">Назад</button>
-				</a>
+				<a href="/view_user/{{ userId }}" name="back" id="back" class="block__button block__back">Назад</a>
 				<button type="submit" name="update" id="update" class="block__button block__update">Обновить</button>
 			</div>
 		</div>

@@ -1,7 +1,13 @@
 {% extends "base.html.twig" %}
-{% block title %}ERROR{% endblock %}
+{% block title %}ERROR
+{% endblock %}
 {% block body %}
-    <p>An error has occurred!</p>
-    <br>
-    {{ mess }}
+	<div class="content">
+		<img src="/image/backgroundImage.jpg" class="background"/>
+		<div class="section">
+			<h1 class="section__title">An error has occurred!</h1>
+			<div class="section__line"></div>
+            <h2 class="section__subtitle">{{ mess }}</h2>
+		</div>
+	</div>
 {% endblock %}

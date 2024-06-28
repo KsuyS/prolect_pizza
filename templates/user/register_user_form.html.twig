@@ -1,6 +1,9 @@
 {% extends "/user/baseUser.html.twig" %}
 {% block title %}Регистрация
 {% endblock %}
+{% block javascripts %}
+		<script type="text/javascript" src="/scrypt/register-user.js"></script>
+	{% endblock %}
 {% block body %}
 	<form enctype="multipart/form-data" action="/register_user" method="post" class="register-form container">
 		<div class="content">

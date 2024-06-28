@@ -220,12 +220,23 @@ a {
     margin-right: 40px;
 }
 
+.block__buttt {
+    display: flex;
+    justify-content: right;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
 .block__back {
    background-color: #7A7A7A;
+   font: 400 16px/20px Oxygen;
+   text-align: center;
+   color: FFFFFF;
 }
 
 .block__preview-avatar {
-    width: 300px;
+    max-width: 300px;
+    max-height: 350px;
     margin-bottom: 40px;
 }
 
@@ -255,4 +266,27 @@ a {
 .section__line {
     margin-bottom: 30px;
     border-bottom: solid 2px #07021a;
+}
+
+.block__avatar-preview {
+    height: 48px;
+    width: 48px;
+    border-radius: 60px;
+    margin-bottom: 10px;
+}
+
+.section__form {
+margin-bottom: 20px;
+}
+
+.section__item-list {
+    font-family: "Oxygen", serif;
+    font-size: 30px;
+    line-height: 16px;
+    color: #07021a;
+    padding: 10px;
+}
+
+.section__div {
+    text-align: center;
 }

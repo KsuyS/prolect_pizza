@@ -5,7 +5,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +19,10 @@ class UserController extends AbstractController
         'image/jpeg' => 'jpeg',
         'image/gif' => 'gif',
     ];
+    private function getAvatarExtension(string $mimeType): ?string
+    {
+        return self::SUPPORT_MIME_TYPES[$mimeType] ?? null;
+    }
 
     public function __construct(UserRepository $userRepository)
     {
@@ -30,11 +33,7 @@ class UserController extends AbstractController
     {
         return $this->render('user/register_user_form.html.twig');
     }
-    private function getAvatarExtension(string $mimeType): ?string
-    {
-        return self::SUPPORT_MIME_TYPES[$mimeType] ?? null;
-    }
-
+    
     public function registerUser(Request $data): ?Response
     {
         $user = new User(
@@ -62,46 +61,19 @@ class UserController extends AbstractController
             $user->setAvatarPath($file);
             $this->userRepository->store($user);
         }
-
-        return $this->redirectToRoute('view_user', ['userId' => $userId], Response::HTTP_SEE_OTHER);
-    }
-
-    private function downloadImage(int $id): ?string
-    {
-        $uploadfile = __DIR__ . '/../../public/uploads/avatar';
-        $file = null;
-
-        if ($_FILES['avatar_path']['error'] == 0) {
-            $extension = $this->getAvatarExtension($_FILES['avatar_path']['type']);
-            if ($extension == null) {
-                $mess = 'Error with extension!';
-                return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
-            }
-            if (move_uploaded_file($_FILES['avatar_path']['tmp_name'], $uploadfile . $id . '.' . $extension)) {
-                $file = 'avatar' . $id . '.' . $extension;
-            }
-        }
-        return $file;
+        return $this->redirectToRoute('view_all_users');
     }
 
     public function updateUser(int $userId, Request $data): Response
     {
         $user = $this->userRepository->findById($userId);
         if (!$user) {
-            $mess = 'You can not update user with this ID';
+            $mess = 'You can not update user with this ID!';
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
 
         if ($data->isMethod('post')) {
-            // if (($this->userRepository->findByEmail($data->get('email')) != null)) {
-            //     $mess = 'The user with this email already exists';
-            //     return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
-            // }
-            // if ($this->userRepository->findByPhone($data->get('phone')) != null) {
-            //     $mess = 'The user with this phone already exists';
-            //     return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
-            // }
-            $user = $this->updateUsersData($data);
+            $user = $this->updateUserData($data);
             echo ('Данные успешно обновлены!');
             return $this->redirectToRoute('view_user', ['userId' => $userId], Response::HTTP_SEE_OTHER);
         }
@@ -115,7 +87,7 @@ class UserController extends AbstractController
             'avatarPath' => $user->getAvatarPath(),
         ]);
     }
-    private function updateUsersData(Request $data): User
+    private function updateUserData(Request $data): User
     {
         $id = (int) $data->get('user_id');
         $user = $this->userRepository->findById($id);
@@ -138,19 +110,29 @@ class UserController extends AbstractController
         $this->userRepository->store($user);
         return $user;
     }
-
-    private function deleteImage(User $user): void
+    public function viewUser(int $userId): Response
     {
-        $avatarPath = $user->getAvatarPath();
-        $filePath = __DIR__ . '/../../public/uploads/' . $avatarPath;
-        if (file_exists($filePath)) {
-            unlink($filePath);
-            echo "File Successfully Delete.";
-
-        } else {
-            echo "File does not exists";
+        $user = $this->userRepository->findById($userId);
+        if (!$user) {
+            $mess = 'There is not user with this ID!';
+            return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
+
+        return $this->render('user/view_user.html.twig', [
+            'userId' => $user->getId(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'phone' => $user->getPhone(),
+            'avatarPath' => $user->getAvatarPath(),
+        ]);
     }
+    public function viewAllUsers(): Response
+    {
+        $view_all_users = $this->userRepository->listAll();
+        return $this->render('user/view_all_users.html.twig', ['view_all_users' => $view_all_users]);
+    }
+
     public function deleteUser(int $userId): Response
     {
         $user = $this->userRepository->findById($userId);
@@ -166,29 +148,37 @@ class UserController extends AbstractController
         return $this->redirectToRoute('view_all_users');
     }
 
-    public function viewUser(int $userId): Response
+    private function downloadImage(int $id): ?string
     {
-        $user = $this->userRepository->findById($userId);
-        if (!$user) {
-            $mess = 'There is not user with this ID';
-            return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
+        $uploadfile = __DIR__ . '/../../public/uploads/avatar';
+        $file = null;
+
+        if ($_FILES['avatar_path']['error'] == 0) {
+            $extension = $this->getAvatarExtension($_FILES['avatar_path']['type']);
+            if ($extension == null) {
+                $mess = 'Error with extension!';
+                return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
+            }
+            if (move_uploaded_file($_FILES['avatar_path']['tmp_name'], $uploadfile . $id . '.' . $extension)) {
+                $file = 'avatar' . $id . '.' . $extension;
+            }
         }
-
-        return $this->render('user/view_user.html.twig', [
-            'userId' => $user->getId(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-            'email' => $user->getEmail(),
-            'phone' => $user->getPhone(),
-            'avatarPath' => $user->getAvatarPath(),
-        ]);
+        return $file;
     }
 
-    public function viewAllUsers(): Response
+    private function deleteImage(User $user): void
     {
-        $view_all_users = $this->userRepository->listAll();
-        return $this->render('user/view_all_users.html.twig', ['view_all_users' => $view_all_users]);
+        $avatarPath = $user->getAvatarPath();
+        $filePath = __DIR__ . '/../../public/uploads/' . $avatarPath;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+            echo "File Successfully Delete.";
+
+        } else {
+            echo "File does not exists";
+        }
     }
+
     public function pageWithError(string $mess): Response
     {
         return $this->render('pageWithError.html.twig', ['mess' => $mess]);

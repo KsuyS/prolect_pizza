@@ -33,7 +33,7 @@ class UserController extends AbstractController
     {
         return $this->render('user/register_user_form.html.twig');
     }
-    
+
     public function registerUser(Request $data): ?Response
     {
         $user = new User(
@@ -46,12 +46,12 @@ class UserController extends AbstractController
         );
 
         if ($this->userRepository->findByEmail($data->get('email')) != null) {
-            $mess = 'A user with such an email already exists!';
+            $mess = 'A user with such an email already exists.';
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
 
         if ($this->userRepository->findByPhone($data->get('phone')) != null) {
-            $mess = 'A user with such an phone already exists!';
+            $mess = 'A user with such an phone already exists.';
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
 
@@ -68,11 +68,15 @@ class UserController extends AbstractController
     {
         $user = $this->userRepository->findById($userId);
         if (!$user) {
-            $mess = 'You can not update user with this ID!';
+            $mess = 'You can not update user with this ID.';
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
 
         if ($data->isMethod('post')) {
+            if ($this->userRepository->findByEmail($data->get('email')) != null) {
+                $mess = 'The user with this email already exists';
+                return $this->redirectToRoute('error_page', ['mess' => $mess]);
+            }
             $user = $this->updateUserData($data);
             echo ('Данные успешно обновлены!');
             return $this->redirectToRoute('view_user', ['userId' => $userId], Response::HTTP_SEE_OTHER);
@@ -114,7 +118,7 @@ class UserController extends AbstractController
     {
         $user = $this->userRepository->findById($userId);
         if (!$user) {
-            $mess = 'There is not user with this ID!';
+            $mess = 'There is not user with this ID.';
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
 
@@ -138,7 +142,7 @@ class UserController extends AbstractController
         $user = $this->userRepository->findById($userId);
 
         if (!$user) {
-            $mess = 'There is no such user!';
+            $mess = 'There is no such user.';
             return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
         }
         $this->userRepository->delete($user);
@@ -156,7 +160,7 @@ class UserController extends AbstractController
         if ($_FILES['avatar_path']['error'] == 0) {
             $extension = $this->getAvatarExtension($_FILES['avatar_path']['type']);
             if ($extension == null) {
-                $mess = 'Error with extension!';
+                $mess = 'Error with extension.';
                 return $this->redirectToRoute('pageWithError', ['mess' => $mess]);
             }
             if (move_uploaded_file($_FILES['avatar_path']['tmp_name'], $uploadfile . $id . '.' . $extension)) {
